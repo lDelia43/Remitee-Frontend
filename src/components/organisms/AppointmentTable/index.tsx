@@ -26,7 +26,10 @@ const statusOptions: { label: string; value: AppointmentStatus | "all" }[] = [
   { label: "Cancelled", value: "Cancelled" },
 ];
 
-export const AppointmentTable = ({ onCancelAppointment, externalSearch }: AppointmentTableProps) => {
+export const AppointmentTable = ({
+  onCancelAppointment,
+  externalSearch,
+}: AppointmentTableProps) => {
   const { appointments, isLoading, isError, error } = useAllAppointments();
   const { data: doctors = [] } = useDoctors();
   const [search, setSearch] = useState(externalSearch ?? "");
@@ -37,6 +40,7 @@ export const AppointmentTable = ({ onCancelAppointment, externalSearch }: Appoin
 
   useEffect(() => {
     if (externalSearch !== undefined) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- syncing internal state from external prop
       setSearch(externalSearch);
       setPage(1);
     }
@@ -49,7 +53,10 @@ export const AppointmentTable = ({ onCancelAppointment, externalSearch }: Appoin
 
   const handleSort = (key: SortKey) => {
     if (sortKey === key) setSortDir((d) => (d === "asc" ? "desc" : "asc"));
-    else { setSortKey(key); setSortDir("asc"); }
+    else {
+      setSortKey(key);
+      setSortDir("asc");
+    }
   };
 
   const filtered = useMemo(() => {
@@ -58,9 +65,7 @@ export const AppointmentTable = ({ onCancelAppointment, externalSearch }: Appoin
       .filter((a) => {
         const doctorLabel = doctorMap.get(a.doctorId)?.toLowerCase() ?? "";
         const matchesSearch =
-          !q ||
-          a.patientName.toLowerCase().includes(q) ||
-          doctorLabel.includes(q);
+          !q || a.patientName.toLowerCase().includes(q) || doctorLabel.includes(q);
         const matchesStatus = statusFilter === "all" || a.status === statusFilter;
         return matchesSearch && matchesStatus;
       })
@@ -80,7 +85,10 @@ export const AppointmentTable = ({ onCancelAppointment, externalSearch }: Appoin
 
   const pages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-  const handleSearch = useCallback((val: string) => { setSearch(val); setPage(1); }, []);
+  const handleSearch = useCallback((val: string) => {
+    setSearch(val);
+    setPage(1);
+  }, []);
 
   if (isError) {
     return (
@@ -104,11 +112,15 @@ export const AppointmentTable = ({ onCancelAppointment, externalSearch }: Appoin
           {statusOptions.map((opt) => (
             <button
               key={opt.value}
-              onClick={() => { setStatusFilter(opt.value); setPage(1); }}
+              onClick={() => {
+                setStatusFilter(opt.value);
+                setPage(1);
+              }}
               className="px-3 py-1.5 text-xs rounded-lg font-medium transition-colors"
               style={{
                 backgroundColor: statusFilter === opt.value ? "var(--accent)" : "var(--default)",
-                color: statusFilter === opt.value ? "var(--accent-foreground)" : "var(--foreground)",
+                color:
+                  statusFilter === opt.value ? "var(--accent-foreground)" : "var(--foreground)",
               }}
             >
               {opt.label}
@@ -126,17 +138,41 @@ export const AppointmentTable = ({ onCancelAppointment, externalSearch }: Appoin
               <Table.Content aria-label="Appointments">
                 <Table.Header>
                   <Table.Column isRowHeader>
-                    <SortHeader label="Patient" sortKey="patientName" current={sortKey} dir={sortDir} onSort={handleSort} />
+                    <SortHeader
+                      label="Patient"
+                      sortKey="patientName"
+                      current={sortKey}
+                      dir={sortDir}
+                      onSort={handleSort}
+                    />
                   </Table.Column>
                   <Table.Column>
-                    <SortHeader label="Doctor" sortKey="doctorName" current={sortKey} dir={sortDir} onSort={handleSort} />
+                    <SortHeader
+                      label="Doctor"
+                      sortKey="doctorName"
+                      current={sortKey}
+                      dir={sortDir}
+                      onSort={handleSort}
+                    />
                   </Table.Column>
                   <Table.Column>
-                    <SortHeader label="Date" sortKey="scheduledAt" current={sortKey} dir={sortDir} onSort={handleSort} />
+                    <SortHeader
+                      label="Date"
+                      sortKey="scheduledAt"
+                      current={sortKey}
+                      dir={sortDir}
+                      onSort={handleSort}
+                    />
                   </Table.Column>
                   <Table.Column>Time</Table.Column>
                   <Table.Column>
-                    <SortHeader label="Status" sortKey="status" current={sortKey} dir={sortDir} onSort={handleSort} />
+                    <SortHeader
+                      label="Status"
+                      sortKey="status"
+                      current={sortKey}
+                      dir={sortDir}
+                      onSort={handleSort}
+                    />
                   </Table.Column>
                   <Table.Column> </Table.Column>
                 </Table.Header>
@@ -167,10 +203,14 @@ export const AppointmentTable = ({ onCancelAppointment, externalSearch }: Appoin
                           </span>
                         </Table.Cell>
                         <Table.Cell>
-                          <span className="text-[--muted]">{formatDate(appointment.scheduledAt)}</span>
+                          <span className="text-[--muted]">
+                            {formatDate(appointment.scheduledAt)}
+                          </span>
                         </Table.Cell>
                         <Table.Cell>
-                          <span className="text-[--muted]">{formatTime(appointment.scheduledAt)}</span>
+                          <span className="text-[--muted]">
+                            {formatTime(appointment.scheduledAt)}
+                          </span>
                         </Table.Cell>
                         <Table.Cell>
                           <AppointmentStatusBadge status={appointment.status} />
@@ -227,7 +267,8 @@ const Pagination = ({
   const getPages = (): (number | "...")[] => {
     if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
     if (currentPage <= 4) return [1, 2, 3, 4, 5, "...", totalPages];
-    if (currentPage >= totalPages - 3) return [1, "...", totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+    if (currentPage >= totalPages - 3)
+      return [1, "...", totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
     return [1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages];
   };
 
@@ -240,14 +281,22 @@ const Pagination = ({
         className="w-7 h-7 flex items-center justify-center rounded-md transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
         style={{ border: "1px solid var(--border)", color: "var(--muted)" }}
       >
-        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+        <svg
+          className="w-3.5 h-3.5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2.5}
+        >
           <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
         </svg>
       </button>
 
       {getPages().map((p, i) =>
         p === "..." ? (
-          <span key={`ellipsis-${i}`} className="px-1 text-xs text-[--muted]">…</span>
+          <span key={`ellipsis-${i}`} className="px-1 text-xs text-[--muted]">
+            …
+          </span>
         ) : (
           <button
             key={p}
@@ -271,7 +320,13 @@ const Pagination = ({
         className="w-7 h-7 flex items-center justify-center rounded-md transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
         style={{ border: "1px solid var(--border)", color: "var(--muted)" }}
       >
-        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+        <svg
+          className="w-3.5 h-3.5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2.5}
+        >
           <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
         </svg>
       </button>
@@ -319,10 +374,7 @@ const SortHeader = ({
 
 const TableSkeleton = () => (
   <div className="flex flex-col gap-2">
-    <div
-      className="flex gap-4 px-3 py-2 rounded-lg"
-      style={{ backgroundColor: "var(--default)" }}
-    >
+    <div className="flex gap-4 px-3 py-2 rounded-lg" style={{ backgroundColor: "var(--default)" }}>
       {Array.from({ length: 6 }).map((_, i) => (
         <Skeleton key={i} className="h-4 flex-1 rounded-md" />
       ))}

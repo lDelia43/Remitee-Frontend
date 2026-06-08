@@ -29,7 +29,11 @@ interface FormState {
 
 const emptyForm: FormState = { doctorId: "", patientName: "", scheduledAt: "" };
 
-export const AppointmentForm = ({ preselectedDoctor, onSuccess, onCancel }: AppointmentFormProps) => {
+export const AppointmentForm = ({
+  preselectedDoctor,
+  onSuccess,
+  onCancel,
+}: AppointmentFormProps) => {
   const { data: doctors } = useDoctors();
   const { mutate: createAppointment, isPending } = useCreateAppointment();
   const [form, setForm] = useState<FormState>({
@@ -132,4 +136,4 @@ export const AppointmentForm = ({ preselectedDoctor, onSuccess, onCancel }: Appo
       </div>
     </form>
   );
-}
+};

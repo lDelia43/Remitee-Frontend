@@ -43,7 +43,10 @@ export const CreateAppointmentModal = ({
           <Modal.Body>
             <AppointmentForm
               preselectedDoctor={preselectedDoctor}
-              onSuccess={(patientName) => { onCreated?.(patientName); onClose(); }}
+              onSuccess={(patientName) => {
+                onCreated?.(patientName);
+                onClose();
+              }}
               onCancel={onClose}
             />
           </Modal.Body>

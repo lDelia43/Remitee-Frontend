@@ -12,16 +12,25 @@ const DOCTOR_ID = "doc-1";
 const APPT_ID = "appt-1";
 
 const mockAppointments: Appointment[] = [
-  { id: APPT_ID, doctorId: DOCTOR_ID, patientName: "Jane Doe", scheduledAt: "2099-01-15T10:00:00Z", status: "Active" },
-  { id: "appt-2", doctorId: DOCTOR_ID, patientName: "John Smith", scheduledAt: "2099-01-16T11:00:00Z", status: "Active" },
+  {
+    id: APPT_ID,
+    doctorId: DOCTOR_ID,
+    patientName: "Jane Doe",
+    scheduledAt: "2099-01-15T10:00:00Z",
+    status: "Active",
+  },
+  {
+    id: "appt-2",
+    doctorId: DOCTOR_ID,
+    patientName: "John Smith",
+    scheduledAt: "2099-01-16T11:00:00Z",
+    status: "Active",
+  },
 ];
 
 /** Seeds the QueryClient cache with mock appointments for the given doctor. */
 const seedCache = (queryClient: ReturnType<typeof createWrapper>["queryClient"]) => {
-  queryClient.setQueryData(
-    queryKeys.appointments.byDoctor(DOCTOR_ID, 1, 100),
-    mockAppointments
-  );
+  queryClient.setQueryData(queryKeys.appointments.byDoctor(DOCTOR_ID, 1, 100), mockAppointments);
 };
 
 describe("useCancelAppointment", () => {
@@ -46,7 +55,9 @@ describe("useCancelAppointment", () => {
   it("applies an optimistic update to the cache before the API responds", async () => {
     let resolve!: (value: { id: string; status: string }) => void;
     vi.mocked(appointmentsApi.cancel).mockReturnValueOnce(
-      new Promise((r) => { resolve = r; })
+      new Promise((r) => {
+        resolve = r;
+      })
     );
 
     const { wrapper, queryClient } = createWrapper();

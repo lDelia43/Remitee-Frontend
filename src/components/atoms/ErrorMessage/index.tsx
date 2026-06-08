@@ -11,7 +11,10 @@ export const ErrorMessage = ({ message, onRetry }: ErrorMessageProps) => (
   <div className="flex flex-col items-center justify-center py-16 px-4 text-center gap-4">
     <div
       className="w-12 h-12 rounded-full flex items-center justify-center"
-      style={{ backgroundColor: "color-mix(in oklab, var(--danger) 12%, transparent)", color: "var(--danger)" }}
+      style={{
+        backgroundColor: "color-mix(in oklab, var(--danger) 12%, transparent)",
+        color: "var(--danger)",
+      }}
     >
       <WarningTriangleIcon className="w-6 h-6" />
     </div>

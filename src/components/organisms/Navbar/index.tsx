@@ -45,7 +45,9 @@ export const Navbar = () => {
                   href={item.href}
                   className="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
                   style={{
-                    backgroundColor: isActive ? "color-mix(in oklab, var(--accent) 12%, transparent)" : "transparent",
+                    backgroundColor: isActive
+                      ? "color-mix(in oklab, var(--accent) 12%, transparent)"
+                      : "transparent",
                     color: isActive ? "var(--accent)" : "var(--muted)",
                   }}
                 >
@@ -69,7 +71,9 @@ export const Navbar = () => {
                 href={item.href}
                 className="flex-1 text-center px-2 py-1.5 rounded-lg text-xs font-medium transition-colors"
                 style={{
-                  backgroundColor: isActive ? "color-mix(in oklab, var(--accent) 12%, transparent)" : "transparent",
+                  backgroundColor: isActive
+                    ? "color-mix(in oklab, var(--accent) 12%, transparent)"
+                    : "transparent",
                   color: isActive ? "var(--accent)" : "var(--muted)",
                 }}
               >

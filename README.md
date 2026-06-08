@@ -60,11 +60,11 @@ npm run test:coverage # Run tests with V8 coverage report
 
 All **four features** of the main flow are implemented:
 
-| Feature | Description |
-|---|---|
-| **View doctors** | Card grid showing each doctor's name and specialty |
-| **Create appointment** | Form with doctor selection, patient name, and date/time |
-| **View appointments** | Table with search, status filter, column sorting, and pagination |
+| Feature                | Description                                                                        |
+| ---------------------- | ---------------------------------------------------------------------------------- |
+| **View doctors**       | Card grid showing each doctor's name and specialty                                 |
+| **Create appointment** | Form with doctor selection, patient name, and date/time                            |
+| **View appointments**  | Table with search, status filter, column sorting, and pagination                   |
 | **Cancel appointment** | Confirmation modal with appointment details; disabled if past or already cancelled |
 
 The integration is real-time: creating or cancelling an appointment updates the list automatically without reloading the page, through React Query cache invalidation.
@@ -98,20 +98,25 @@ src/
 ## Technical decisions
 
 ### Component architecture — Atomic Design
+
 A four-layer structure (atoms → molecules → organisms → templates) was adopted to keep concerns separated. Pages in `app/` are intentionally thin — they only export metadata and render a single template component. No barrel files (`index.ts`): every import points directly to the component file.
 
 ### Remote state — TanStack Query v5
+
 All server state lives in React Query; no Redux or Zustand. Cache invalidation via the `byDoctorAll(doctorId)` prefix allows updating all cached pages for a doctor without knowing the exact pagination params at the call site.
 
 `useAllAppointments()` is a two-step fan-out: it first fetches all doctors, then runs `useQueries` in parallel (one per doctor, `pageSize=100`). This aggregates all appointments on the client, enabling search, filtering, and sorting without additional endpoints.
 
 ### HeroUI v3 dot-notation API
+
 HeroUI v3 is built on React Aria. All compound components use dot-notation (`Modal.Backdrop`, `Table.Content`, `Card.Content`, `Select.Trigger`, etc.) to avoid the v2 named imports, which are deprecated.
 
 ### Axios with typed errors
+
 The Axios response interceptor enriches every error with `.problem: { title, status }` following the backend's RFC 9110 format. `extractErrorMessage()` centralizes reading these errors for toasts and UI messages.
 
 ### Tailwind CSS v4
+
 Configuration is 100% CSS-based (`@import "@heroui/styles"` in `globals.css`). There is no `tailwind.config.ts`. HeroUI theme variables are consumed directly as `var(--accent)`, `var(--muted)`, etc.
 
 ---

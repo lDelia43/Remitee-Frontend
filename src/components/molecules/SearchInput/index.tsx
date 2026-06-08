@@ -35,7 +35,10 @@ export const SearchInput = ({
 
   return (
     <div className={`relative ${className ?? ""}`}>
-      <span className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: "var(--muted)" }}>
+      <span
+        className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+        style={{ color: "var(--muted)" }}
+      >
         <SearchIcon className="w-4 h-4" />
       </span>
       <input

@@ -16,6 +16,7 @@ npm run test:coverage  # Vitest + V8 coverage report
 ```
 
 Run a single test file:
+
 ```bash
 npx vitest run src/__tests__/utils/date.utils.test.ts
 ```
@@ -75,12 +76,12 @@ Query keys live in `src/constants/query-keys.ts`. The `byDoctorAll(doctorId)` ke
 
 Backend: `http://localhost:8080`
 
-| Method | Path | Notes |
-|--------|------|-------|
-| `GET` | `/doctors` | Returns `{ doctors: [{id, name, specialty}] }` — no pagination |
-| `GET` | `/appointments?doctorId=&page=&pageSize=` | Returns `{ appointments: [...], totalCount, page, pageSize, totalPages }` |
-| `POST` | `/appointments` | Body: `{doctorId, patientName, scheduledAt}` — `scheduledAt` is UTC ISO 8601 |
-| `PATCH` | `/appointments/:id/cancel` | Returns `{id, status}` |
+| Method  | Path                                      | Notes                                                                        |
+| ------- | ----------------------------------------- | ---------------------------------------------------------------------------- |
+| `GET`   | `/doctors`                                | Returns `{ doctors: [{id, name, specialty}] }` — no pagination               |
+| `GET`   | `/appointments?doctorId=&page=&pageSize=` | Returns `{ appointments: [...], totalCount, page, pageSize, totalPages }`    |
+| `POST`  | `/appointments`                           | Body: `{doctorId, patientName, scheduledAt}` — `scheduledAt` is UTC ISO 8601 |
+| `PATCH` | `/appointments/:id/cancel`                | Returns `{id, status}`                                                       |
 
 Errors follow RFC 9110: `{ title: string, status: number }`. `extractErrorMessage()` in `src/utils/error.utils.ts` handles this. `AppointmentStatus` values are `"Active"` and `"Cancelled"` (capitalized).
 
@@ -89,11 +90,13 @@ Errors follow RFC 9110: `{ title: string, status: number }`. `extractErrorMessag
 Tests live in `src/__tests__/` mirroring the source tree. Setup file is `src/test/setup.ts` — it registers `@testing-library/jest-dom` matchers and exports `createWrapper()` for React Query hook tests.
 
 All test imports are explicit (no `globals: true`):
+
 ```ts
 import { describe, it, expect, vi } from "vitest";
 ```
 
 Hooks are tested by mocking the API modules with `vi.mock()` and wrapping with `createWrapper()`:
+
 ```ts
 import { createWrapper } from "@/test/setup";
 vi.mock("@/services/api/appointments.api");
@@ -109,13 +112,18 @@ HeroUI v3 is built on React Aria. All compound components use **dot-notation**. 
 **Deprecated props** (from react-stately): `selectedKey` → `value`, `defaultSelectedKey` → `defaultValue`, `onSelectionChange` → `onChange`.
 
 **Button**:
+
 ```tsx
 // variants: "primary" | "secondary" | "tertiary" | "danger" | "danger-soft" | "ghost" | "outline"
-<Button variant="primary" isDisabled={loading}>Save</Button>
+<Button variant="primary" isDisabled={loading}>
+  Save
+</Button>
 ```
+
 No `color`, no `startContent`, no `isPending` props.
 
 **Card**:
+
 ```tsx
 <Card>
   <Card.Content className="p-5">...</Card.Content>
@@ -123,18 +131,31 @@ No `color`, no `startContent`, no `isPending` props.
 ```
 
 **Modal** — controlled via `isOpen` / `onOpenChange`. Because `ModalRoot` internally wraps children with a `PressResponder`, a visually-hidden `Modal.Trigger` must be the first child — otherwise React Aria logs a `<Pressable> child must be focusable` warning. Do **not** use `display: none` (makes element non-focusable); use the sr-only pattern:
+
 ```tsx
 <Modal isOpen={open} onOpenChange={onClose}>
   <Modal.Trigger
     aria-hidden="true"
     tabIndex={-1}
-    style={{ position: "absolute", width: 1, height: 1, padding: 0, margin: -1,
-             overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap", border: 0, opacity: 0 }}
+    style={{
+      position: "absolute",
+      width: 1,
+      height: 1,
+      padding: 0,
+      margin: -1,
+      overflow: "hidden",
+      clip: "rect(0,0,0,0)",
+      whiteSpace: "nowrap",
+      border: 0,
+      opacity: 0,
+    }}
   />
   <Modal.Backdrop>
     <Modal.Container>
       <Modal.Dialog>
-        <Modal.Header><Modal.Heading>Title</Modal.Heading></Modal.Header>
+        <Modal.Header>
+          <Modal.Heading>Title</Modal.Heading>
+        </Modal.Header>
         <Modal.Body>...</Modal.Body>
         <Modal.Footer>...</Modal.Footer>
       </Modal.Dialog>
@@ -144,8 +165,13 @@ No `color`, no `startContent`, no `isPending` props.
 ```
 
 **Select** — use `value` / `onChange` (not `selectedKey` / `onSelectionChange`). `textValue` is required on every `ListBox.Item`. `placeholder` goes on `Select` root, not on `Select.Value`:
+
 ```tsx
-<Select value={value || null} onChange={(key) => onChange(key?.toString() ?? "")} placeholder="Select an option">
+<Select
+  value={value || null}
+  onChange={(key) => onChange(key?.toString() ?? "")}
+  placeholder="Select an option"
+>
   <Label>Label</Label>
   <Select.Trigger>
     <Select.Value />
@@ -153,13 +179,16 @@ No `color`, no `startContent`, no `isPending` props.
   </Select.Trigger>
   <Select.Popover>
     <ListBox>
-      <ListBox.Item key="a" id="a" textValue="Option A">Option A</ListBox.Item>
+      <ListBox.Item key="a" id="a" textValue="Option A">
+        Option A
+      </ListBox.Item>
     </ListBox>
   </Select.Popover>
 </Select>
 ```
 
 **Table** — `aria-label` goes on `Table.Content` (the actual `<table>` element), not the `Table` wrapper. At least one `Table.Column` must have `isRowHeader`:
+
 ```tsx
 <Table>
   <Table.ScrollContainer>
@@ -179,6 +208,7 @@ No `color`, no `startContent`, no `isPending` props.
 ```
 
 **Toast**:
+
 ```tsx
 import { toast } from "@heroui/react";
 toast.success("Title", { description: "..." });
@@ -187,7 +217,10 @@ toast.danger("Title", { description: "..." });
 ```
 
 **Chip** (used inside `Badge` atom):
+
 ```tsx
-<Chip color="success" variant="soft" size="sm">Active</Chip>
+<Chip color="success" variant="soft" size="sm">
+  Active
+</Chip>
 // colors: "accent" | "success" | "warning" | "danger" | "default"
 ```

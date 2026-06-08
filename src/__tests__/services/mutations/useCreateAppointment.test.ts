@@ -62,7 +62,9 @@ describe("useCreateAppointment", () => {
   it("exposes isPending=true while the mutation is in flight", async () => {
     let resolve!: (value: Appointment) => void;
     vi.mocked(appointmentsApi.create).mockReturnValueOnce(
-      new Promise((r) => { resolve = r; })
+      new Promise((r) => {
+        resolve = r;
+      })
     );
     const { wrapper } = createWrapper();
     const { result } = renderHook(() => useCreateAppointment(), { wrapper });
@@ -81,9 +83,7 @@ describe("useCreateAppointment", () => {
   });
 
   it("sets isError=true when the API rejects", async () => {
-    vi.mocked(appointmentsApi.create).mockRejectedValueOnce(
-      new Error("Slot already taken")
-    );
+    vi.mocked(appointmentsApi.create).mockRejectedValueOnce(new Error("Slot already taken"));
     const { wrapper } = createWrapper();
     const { result } = renderHook(() => useCreateAppointment(), { wrapper });
 

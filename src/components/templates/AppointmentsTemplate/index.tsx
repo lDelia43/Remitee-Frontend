@@ -25,11 +25,7 @@ export const AppointmentsTemplate = () => {
               Manage and track all patient appointments
             </Typography>
           </div>
-          <Button
-            variant="primary"
-            size="sm"
-            onPress={() => setIsCreateModalOpen(true)}
-          >
+          <Button variant="primary" size="sm" onPress={() => setIsCreateModalOpen(true)}>
             <PlusIcon className="w-4 h-4" />
             New Appointment
           </Button>
@@ -50,7 +46,9 @@ export const AppointmentsTemplate = () => {
       <CreateAppointmentModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
-        onCreated={(name) => { setCreatedPatient(name); }}
+        onCreated={(name) => {
+          setCreatedPatient(name);
+        }}
       />
     </PageLayout>
   );

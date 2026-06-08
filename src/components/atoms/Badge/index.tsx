@@ -8,7 +8,10 @@ interface BadgeProps {
   size?: "sm" | "md" | "lg";
 }
 
-const variantToColor: Record<BadgeVariant, "accent" | "success" | "warning" | "danger" | "default"> = {
+const variantToColor: Record<
+  BadgeVariant,
+  "accent" | "success" | "warning" | "danger" | "default"
+> = {
   primary: "accent",
   success: "success",
   warning: "warning",

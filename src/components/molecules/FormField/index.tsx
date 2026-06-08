@@ -1,6 +1,14 @@
 "use client";
 
-import { Label, TextField, InputGroup, FieldError, Select, ListBox, Description } from "@heroui/react";
+import {
+  Label,
+  TextField,
+  InputGroup,
+  FieldError,
+  Select,
+  ListBox,
+  Description,
+} from "@heroui/react";
 
 interface BaseFieldProps {
   label: string;
@@ -72,12 +80,7 @@ export function FormField(props: FormFieldProps) {
     >
       <Label className="text-sm font-medium text-[--foreground]">{label}</Label>
       <InputGroup>
-        <InputGroup.Input
-          type={type}
-          placeholder={placeholder}
-          min={min}
-          className="w-full"
-        />
+        <InputGroup.Input type={type} placeholder={placeholder} min={min} className="w-full" />
       </InputGroup>
       {error && <FieldError className="text-xs text-[--danger]">{error}</FieldError>}
     </TextField>
