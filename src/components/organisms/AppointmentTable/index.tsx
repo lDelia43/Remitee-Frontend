@@ -1,7 +1,7 @@
 "use client";
 
 import { Table, Button, Skeleton } from "@heroui/react";
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { AppointmentStatusBadge } from "@/components/molecules/AppointmentStatusBadge";
 import { SearchInput } from "@/components/molecules/SearchInput";
 import { EmptyState } from "@/components/atoms/EmptyState";
@@ -14,6 +14,7 @@ import type { Appointment, AppointmentStatus } from "@/types";
 
 interface AppointmentTableProps {
   onCancelAppointment: (appointment: Appointment) => void;
+  externalSearch?: string;
 }
 
 const PAGE_SIZE = 8;
@@ -25,14 +26,21 @@ const statusOptions: { label: string; value: AppointmentStatus | "all" }[] = [
   { label: "Cancelled", value: "Cancelled" },
 ];
 
-export const AppointmentTable = ({ onCancelAppointment }: AppointmentTableProps) => {
+export const AppointmentTable = ({ onCancelAppointment, externalSearch }: AppointmentTableProps) => {
   const { appointments, isLoading, isError, error } = useAllAppointments();
   const { data: doctors = [] } = useDoctors();
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(externalSearch ?? "");
   const [statusFilter, setStatusFilter] = useState<AppointmentStatus | "all">("all");
   const [sortKey, setSortKey] = useState<SortKey>("scheduledAt");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    if (externalSearch !== undefined) {
+      setSearch(externalSearch);
+      setPage(1);
+    }
+  }, [externalSearch]);
 
   const doctorMap = useMemo(
     () => new Map(doctors.map((d) => [d.id, `${d.name} — ${d.specialty}`])),
@@ -86,8 +94,10 @@ export const AppointmentTable = ({ onCancelAppointment }: AppointmentTableProps)
     <div className="flex flex-col gap-4">
       <div className="flex flex-col sm:flex-row gap-3">
         <SearchInput
+          key={externalSearch}
           placeholder="Search patient or doctor..."
           onSearch={handleSearch}
+          defaultValue={externalSearch ?? ""}
           className="flex-1"
         />
         <div className="flex gap-1.5">

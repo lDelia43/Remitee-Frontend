@@ -7,12 +7,14 @@ import type { Doctor } from "@/types";
 interface CreateAppointmentModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onCreated?: (patientName: string) => void;
   preselectedDoctor?: Doctor;
 }
 
 export const CreateAppointmentModal = ({
   isOpen,
   onClose,
+  onCreated,
   preselectedDoctor,
 }: CreateAppointmentModalProps) => (
   <Modal isOpen={isOpen} onOpenChange={onClose}>
@@ -41,7 +43,7 @@ export const CreateAppointmentModal = ({
           <Modal.Body>
             <AppointmentForm
               preselectedDoctor={preselectedDoctor}
-              onSuccess={onClose}
+              onSuccess={(patientName) => { onCreated?.(patientName); onClose(); }}
               onCancel={onClose}
             />
           </Modal.Body>

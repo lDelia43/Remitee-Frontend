@@ -13,6 +13,7 @@ import type { Appointment } from "@/types";
 export const AppointmentsTemplate = () => {
   const [appointmentToCancel, setAppointmentToCancel] = useState<Appointment | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [createdPatient, setCreatedPatient] = useState<string | undefined>(undefined);
 
   return (
     <PageLayout>
@@ -34,7 +35,10 @@ export const AppointmentsTemplate = () => {
           </Button>
         </div>
 
-        <AppointmentTable onCancelAppointment={setAppointmentToCancel} />
+        <AppointmentTable
+          onCancelAppointment={setAppointmentToCancel}
+          externalSearch={createdPatient}
+        />
       </div>
 
       <CancelAppointmentModal
@@ -46,6 +50,7 @@ export const AppointmentsTemplate = () => {
       <CreateAppointmentModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
+        onCreated={(name) => { setCreatedPatient(name); }}
       />
     </PageLayout>
   );

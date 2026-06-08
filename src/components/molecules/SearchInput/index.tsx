@@ -7,6 +7,7 @@ interface SearchInputProps {
   placeholder?: string;
   onSearch: (value: string) => void;
   debounceMs?: number;
+  defaultValue?: string;
   className?: string;
 }
 
@@ -14,9 +15,10 @@ export const SearchInput = ({
   placeholder = "Search...",
   onSearch,
   debounceMs = 300,
+  defaultValue = "",
   className,
 }: SearchInputProps) => {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(defaultValue);
 
   const debounced = useCallback(
     (val: string) => {

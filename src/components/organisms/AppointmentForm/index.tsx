@@ -17,7 +17,7 @@ import type { Doctor } from "@/types";
 
 interface AppointmentFormProps {
   preselectedDoctor?: Doctor;
-  onSuccess: () => void;
+  onSuccess: (patientName: string) => void;
   onCancel: () => void;
 }
 
@@ -71,7 +71,7 @@ export const AppointmentForm = ({ preselectedDoctor, onSuccess, onCancel }: Appo
           toast.success("Appointment created", {
             description: "The appointment has been scheduled successfully.",
           });
-          onSuccess();
+          onSuccess(form.patientName.trim());
         },
         onError: (err) => {
           toast.danger("Failed to create appointment", {
